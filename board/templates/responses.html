@@ -1,0 +1,56 @@
+{% extends 'flatpages/default.html' %}
+
+{% csrf_token %}
+
+{% load custom_filters %}
+
+{% load custom_tags %}
+
+{% block title %}
+    Responses
+{% endblock title %}
+
+{% block content %}
+<h1 class="text-center">Отклики</h1>
+<span class="text-muted fs-6 fw-normal">Всего: {{ page_obj.paginator.count }} </span>
+
+   <hr>
+   {% if responses %}
+        <ul class="list-group list-group-flush">
+            {% for response in responses %}
+                <li class="list-group-item">
+                    <small class="fw-bold">{{ responses.responseTime | date:'d M Y' }}</small>
+                    <a href="{% url 'response_detail' response.id %}">{{ response.text }}</a>
+                    <small class="text-muted">(автор: {{ article.author }})</small> <br>
+                    <small class="fw-bold">категории:
+                        {% for category in article.category.all %}
+                                   <a href="{% url 'category_list' category.id %}"> | {{ category }} | </a>
+                        {% endfor %}
+                    </small>
+                    <p>{{response.text | truncatechars:210}}</p>
+                </li>
+            {% endfor %}
+        </ul>
+   {% else %}
+       <h2>Откликов нет</h2>
+   {% endif %}
+
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}

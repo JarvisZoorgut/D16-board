@@ -1,0 +1,56 @@
+{% extends 'flatpages/default.html' %}
+
+{% csrf_token %}
+
+{% load custom_filters %}
+
+{% load custom_tags %}
+
+{% block title %}
+    Articles
+{% endblock title %}
+
+{% block content %}
+<h1 class="text-center">Объявления</h1>
+<span class="text-muted fs-6 fw-normal">Всего: {{ page_obj.paginator.count }} </span>
+
+   <hr>
+   {% if articles %}
+        <ul class="list-group list-group-flush">
+            {% for article in articles %}
+                <li class="list-group-item">
+                    <small class="fw-bold">{{ article.articleTime | date:'d M Y' }}</small>
+                    <a href="{% url 'article_detail' article.id %}">{{ article.title }}</a>
+                    <small class="text-muted">(автор: {{ article.author }})</small> <br>
+                    <small class="fw-bold">категории:
+                        {% for category in article.category.all %}
+                                   <a href="{% url 'category_list' category.id %}"> | {{ category }} | </a>
+                        {% endfor %}
+                    </small>
+                    <p>{{article.content | truncatechars:210}}</p>
+                </li>
+            {% endfor %}
+        </ul>
+   {% else %}
+       <h2>Объявлений нет</h2>
+   {% endif %}
+
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}
