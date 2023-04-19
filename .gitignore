@@ -5,6 +5,8 @@ __pycache__/
 
 board/board/.env
 
+/.gitignore
+
 *.7z
 *.zip
 *.rar
