@@ -1,0 +1,13 @@
+venv/
+.idea/
+backup/
+__pycache__/
+
+board/board/.env
+
+*.7z
+*.zip
+*.rar
+*.log
+
+!/.gitignore
