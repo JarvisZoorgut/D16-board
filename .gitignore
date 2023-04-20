@@ -10,4 +10,4 @@ board/board/.env
 *.rar
 *.log
 
-!/.gitignore
+/.gitignore
